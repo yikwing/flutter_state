@@ -1,31 +1,38 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_zhuangtai/counter.dart';
-import 'package:provide/provide.dart';
+import 'package:flutter_zhuangtai/redux/count_state.dart';
+import 'package:flutter_zhuangtai/two_page.dart';
+import 'package:redux/redux.dart';
+import 'package:flutter_redux/flutter_redux.dart';
+import 'package:flutter_zhuangtai/redux/reducer.dart';
 
 void main() {
-  var counter = Counter();
-  var provider = Providers();
-
-  provider.provide(Provider<Counter>.value(counter));
+  var store = Store<CountState>(
+    reducer,
+    initialState: CountState.initState(),
+  );
 
   runApp(
-    ProviderNode(
-      child: MyApp(),
-      providers: provider,
-    ),
+    MyApp(store),
   );
 }
 
 class MyApp extends StatelessWidget {
+  final Store<CountState> store;
+
+  MyApp(this.store);
+
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
+    return StoreProvider<CountState>(
+      child: MaterialApp(
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: MyHomePage(title: 'Flutter Demo Home Page'),
       ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
+      store: store,
     );
   }
 }
@@ -50,32 +57,28 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Provide<Counter>(
-              builder: (context, child, counter) {
+            StoreConnector<CountState, int>(
+              converter: (store) {
+                return store.state.count;
+              },
+              builder: (context, count) {
                 return Text(
-                  '${counter.value}',
+                  count.toString(),
                   style: Theme.of(context).textTheme.display1,
                 );
               },
-            ),
-            StreamBuilder<Counter>(
-              initialData: Provide.value<Counter>(context),
-              stream: Provide.stream<Counter>(context)
-                  .where((counter) => counter.value % 2 == 0),
-              builder: (context, snapshot) =>
-                  Text('Last even value: ${snapshot.data.value}'),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Provide.value<Counter>(context).increment();
-          print(Provide.value<Counter>(context).value);
+          Navigator.push(context,
+              MaterialPageRoute(builder: (BuildContext context) => TwoPages()));
         },
-        tooltip: 'Increment',
         child: Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
+      ),
+      // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
