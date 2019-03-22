@@ -1,43 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhuangtai/blocs/count_bloc.dart';
 import 'package:flutter_zhuangtai/realank_flutter_bloc.dart';
-import 'package:flutter_zhuangtai/test_two.dart';
 
-void main() => runApp(MyApp());
+class TwoPages extends StatefulWidget {
+  final Widget child;
 
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return RLKBLoCProvider(
-      bloc: CountBLoC(0),
-      child: MaterialApp(
-        title: 'Flutter Demo',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-        ),
-        home: MyHomePage(title: 'Flutter Demo Home Page'),
-      ),
-    );
-  }
+  TwoPages({Key key, this.child}) : super(key: key);
+
+  _TwoPagesState createState() => _TwoPagesState();
 }
 
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
+class _TwoPagesState extends State<TwoPages> {
   @override
   Widget build(BuildContext context) {
     return RLKBLoCBuilder(
       builder: (BuildContext context, data, RLKBaseBLoC bloc) {
+        var countBLoC = bloc as CountBLoC;
         return Scaffold(
           appBar: AppBar(
-            title: Text(widget.title),
+            title: Text('two Page'),
           ),
           body: Center(
             child: Column(
@@ -55,10 +36,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
           floatingActionButton: FloatingActionButton(
             onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => TwoPages()));
+              countBLoC.increment();
             },
             tooltip: 'Increment',
             child: Icon(Icons.add),
