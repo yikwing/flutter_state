@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_zhuangtai/redux/action.dart';
 import 'package:flutter_zhuangtai/redux/count_state.dart';
 import 'package:flutter_zhuangtai/two_page.dart';
 import 'package:redux/redux.dart';
@@ -8,7 +9,10 @@ import 'package:flutter_zhuangtai/redux/reducer.dart';
 void main() {
   var store = Store<CountState>(
     reducer,
-    initialState: CountState.initState(),
+    initialState: CountState(
+      count: 0,
+      isSwitch: false,
+    ),
   );
 
   runApp(
@@ -64,7 +68,23 @@ class _MyHomePageState extends State<MyHomePage> {
               builder: (context, count) {
                 return Text(
                   count.toString(),
-                  style: Theme.of(context).textTheme.display1,
+                  style: Theme
+                      .of(context)
+                      .textTheme
+                      .display1,
+                );
+              },
+            ),
+            StoreConnector<CountState, VoidCallback>(
+              converter: (Store store) {
+                return () => store.dispatch(Action.changeSwitch);
+              },
+              builder: (BuildContext context, VoidCallback vm) {
+                return Switch(
+                  onChanged: (bool value) {
+                    vm;
+                  },
+                  value: ,
                 );
               },
             ),

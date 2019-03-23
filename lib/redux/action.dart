@@ -1,1 +1,1 @@
-enum Action { increment }
+enum Action { increment,changeSwitch }
