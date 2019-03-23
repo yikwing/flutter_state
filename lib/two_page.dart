@@ -1,55 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhuangtai/counter.dart';
 import 'package:flutter_zhuangtai/switch.dart';
-import 'package:flutter_zhuangtai/two_page.dart';
 import 'package:provide/provide.dart';
 
-void main() {
-  var counter = Counter();
-  var switchChange = SwitchChange();
-  var provider = Providers();
+class TwoPages extends StatelessWidget {
+  final Widget child;
 
-  provider
-    ..provide(Provider<Counter>.value(counter))
-    ..provide(Provider<SwitchChange>.value(switchChange));
+  TwoPages({Key key, this.child}) : super(key: key);
 
-  runApp(
-    ProviderNode(
-      child: MyApp(),
-      providers: provider,
-    ),
-  );
-}
-
-class MyApp extends StatelessWidget {
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  _MyHomePageState createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text('two pages'),
       ),
       body: Center(
         child: Column(
@@ -86,8 +49,8 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.push(context,
-              MaterialPageRoute(builder: (BuildContext context) => TwoPages()));
+          Provide.value<Counter>(context).increment();
+          print(Provide.value<Counter>(context).value);
         },
         tooltip: 'Increment',
         child: Icon(Icons.add),
