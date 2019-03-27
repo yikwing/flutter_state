@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_zhuangtai/redux/action.dart';
 import 'package:flutter_zhuangtai/redux/count_state.dart';
+import 'package:flutter_zhuangtai/redux/switch_view_model.dart';
 
 import 'package:redux/redux.dart';
 import 'package:flutter_redux/flutter_redux.dart';
@@ -28,7 +29,16 @@ class TwoPages extends StatelessWidget {
                 );
               },
               converter: (Store store) => store.state.count,
-            )
+            ),
+            StoreConnector<CountState, SwitchViewModel>(
+              builder: (BuildContext context, SwitchViewModel vm) {
+                return Switch(
+                  onChanged: vm.onChange,
+                  value: vm.active,
+                );
+              },
+              converter: (Store store) => SwitchViewModel.fromState(store),
+            ),
           ],
         ),
       ),
